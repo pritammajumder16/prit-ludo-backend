@@ -1,0 +1,13 @@
+.container {
+  height: 70vh;
+  width: 100%;
+  margin: 20px auto;
+  .ludo {
+    height: 100%;
+    width: 100%;
+    background: url("/assets/ludo-bg.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}

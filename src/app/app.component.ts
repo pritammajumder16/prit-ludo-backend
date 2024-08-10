@@ -7,6 +7,7 @@ import { LudoFooterComponent } from './ludo-footer/ludo-footer.component';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, LudoLogicComponent, LudoFooterComponent],
+  providers: [],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
