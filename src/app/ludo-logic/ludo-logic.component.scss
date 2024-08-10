@@ -1,9 +1,14 @@
+$boardBlue: #008cf8;
+$boardYellow: #ffc400;
+$boardGreen: #00a300;
+$boardRed: #f30f00;
 .container {
   display: flex;
   justify-content: center;
   margin: 20px 0px;
   .ludo {
     height: 450px;
+    position: relative;
     width: 450px;
     background: url("/assets/ludo-bg.png");
     background-size: contain;
@@ -11,21 +16,21 @@
     background-position: center;
   }
 }
-.player-pieces {
+.player-piece {
   height: 20px;
   width: 20px;
   border: 2px solid;
   border-radius: 50%;
   position: absolute;
 }
-[playerId="P1"].player-pieces {
+[playerId="P1"].player-piece {
   background-color: #2eafff;
 }
 
-[playerId="P1"].player-pieces {
+[playerId="P2"].player-piece {
   background-color: #00b550;
 }
-.player-pieces.highlight {
+.player-piece.highlight {
   cursor: pointer;
   border: 2px dashed;
   animation: spin 1s infinite linear;
@@ -40,4 +45,38 @@
   100% {
     transform: rotate(360deg);
   }
+}
+.player-base {
+  width: 38%;
+  height: 38%;
+  border: 1.8rem solid;
+  position: absolute;
+}
+.player-base.highlight {
+  animation: border-blink 0.7s infinite ease-in-out;
+}
+@keyframes border-blink {
+  50% {
+    border-color: rgba($color: #fff, $alpha: 0.8);
+  }
+}
+[playerId="P4"].player-base {
+  top: 0.83rem;
+  left: 0.82rem;
+  border-color: $boardGreen;
+}
+[playerId="P1"].player-base {
+  bottom: 0.83rem;
+  left: 0.82rem;
+  border-color: $boardRed;
+}
+[playerId="P2"].player-base {
+  bottom: 0.83rem;
+  right: 0.87rem;
+  border-color: $boardBlue;
+}
+[playerId="P3"].player-base {
+  top: 0.83rem;
+  right: 0.87rem;
+  border-color: $boardYellow;
 }
