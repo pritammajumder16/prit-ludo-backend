@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './ludo-logic.component.html',
-  styleUrl: './ludo-logic.component.scss'
+  styleUrl: './ludo-logic.component.scss',
 })
-export class LudoLogicComponent {
-
-}
+export class LudoLogicComponent {}
