@@ -10,7 +10,7 @@ $boardRed: #f30f00;
     height: 450px;
     position: relative;
     width: 450px;
-    background: url("/assets/ludo-bg.png");
+    background: url("/assets/ludo-bg.jpg");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -24,11 +24,11 @@ $boardRed: #f30f00;
   position: absolute;
 }
 [playerId="P1"].player-piece {
-  background-color: #2eafff;
+  background-color: #042d95;
 }
 
 [playerId="P2"].player-piece {
-  background-color: #00b550;
+  background-color: rgb(8, 199, 18);
 }
 .player-piece.highlight {
   cursor: pointer;
@@ -47,9 +47,9 @@ $boardRed: #f30f00;
   }
 }
 .player-base {
-  width: 38%;
-  height: 38%;
-  border: 1.8rem solid;
+  width: 40%;
+  height: 40%;
+  border: 1.9rem solid;
   position: absolute;
 }
 .player-base.highlight {
@@ -61,22 +61,22 @@ $boardRed: #f30f00;
   }
 }
 [playerId="P4"].player-base {
-  top: 0.83rem;
-  left: 0.82rem;
-  border-color: $boardGreen;
+  top: 0rem;
+  left: 0rem;
+  border-color: $boardYellow;
 }
 [playerId="P1"].player-base {
-  bottom: 0.83rem;
-  left: 0.82rem;
-  border-color: $boardRed;
-}
-[playerId="P2"].player-base {
-  bottom: 0.83rem;
-  right: 0.87rem;
+  bottom: 0rem;
+  left: 0rem;
   border-color: $boardBlue;
 }
 [playerId="P3"].player-base {
-  top: 0.83rem;
-  right: 0.87rem;
-  border-color: $boardYellow;
+  bottom: 0rem;
+  right: 0rem;
+  border-color: $boardRed;
+}
+[playerId="P2"].player-base {
+  top: 0rem;
+  right: 0rem;
+  border-color: $boardGreen;
 }
