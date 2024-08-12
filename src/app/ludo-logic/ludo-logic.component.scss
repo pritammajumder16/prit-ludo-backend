@@ -24,7 +24,7 @@ $boardRed: #f30f00;
   position: absolute;
 }
 [playerId="P1"].player-piece {
-  background-color: #042d95;
+  background-color: #3a6ded;
 }
 
 [playerId="P2"].player-piece {
@@ -33,17 +33,18 @@ $boardRed: #f30f00;
 .player-piece.highlight {
   cursor: pointer;
   border: 2px dashed;
-  animation: spin 1s infinite linear;
+  // animation: spin 1s infinite linear;
+  // transform-origin: center center;
 }
 @keyframes spin {
   0% {
-    transform: rotate(0deg);
+    transform: scale(1);
   }
   50% {
-    transform: spin(180deg) scale(1.4);
+    transform: scale(1.4);
   }
   100% {
-    transform: rotate(360deg);
+    transform: scale(1.8);
   }
 }
 .player-base {

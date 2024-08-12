@@ -17,42 +17,105 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './ludo-logic.component.html',
-  styleUrl: './ludo-logic.component.scss',
+  styleUrls: ['./ludo-logic.component.scss'],
 })
 export class LudoLogicComponent {
+  public currentPlayer = 'P1';
+  public diceValue!: number;
+  public gameOver = false;
+  private hasValidMove = false;
+
   @ViewChildren('playerPiece') playerPieceQL!: QueryList<ElementRef>;
-  public positions: { [key: string]: number[] } = {
+  public positions = {
     P1: [...BASE_POSITIONS.P1],
     P2: [...BASE_POSITIONS.P2],
   };
+
   ngAfterViewInit() {
     this.initializePiecePositions();
   }
 
-  // Set all pieces to their initial base positions
   private initializePiecePositions() {
-    PLAYERS.forEach((player) => {
-      this.positions[player].forEach((position, pieceIndex) => {
-        this.setPiecePosition(player, pieceIndex, position);
-      });
+    PLAYERS.forEach((player: string) => {
+      this.positions[player as keyof typeof this.positions].forEach(
+        (position, pieceIndex) => {
+          this.setPiecePosition(
+            player as keyof typeof PLAYERS,
+            pieceIndex,
+            position
+          );
+        }
+      );
     });
   }
 
   public onDiceRoll = () => {
-    const diceValue = 6;
-    const player = 'P1'; // You would dynamically determine the current player
-    const piece = 0; // You would select this dynamically based on user input or AI
-    console.log(diceValue);
-    this.movePiece(player, piece, diceValue);
+    if (this.gameOver || this.hasValidMove) return;
+
+    this.diceValue = Math.floor(Math.random() * 6) + 1;
+    console.log(`${this.currentPlayer} rolled a ${this.diceValue}`);
+    this.highlightValidPieces(this.diceValue);
+
+    if (!this.hasValidMove) {
+      this.endTurn();
+    }
   };
-  public movePiece = (
-    player: string,
+
+  private highlightValidPieces(diceValue: number) {
+    this.hasValidMove = false;
+    let currentPositions =
+      this.positions[this.currentPlayer as keyof typeof this.positions];
+    currentPositions.forEach((pos, index) => {
+      const isAtBase =
+        BASE_POSITIONS[
+          this.currentPlayer as keyof typeof BASE_POSITIONS
+        ].includes(pos);
+      if (isAtBase && diceValue === 6) {
+        this.toggleHighlight(index, true);
+        this.hasValidMove = true;
+      } else if (!isAtBase) {
+        this.toggleHighlight(index, true);
+        this.hasValidMove = true;
+      } else {
+        this.toggleHighlight(index, false);
+      }
+    });
+  }
+
+  private toggleHighlight(pieceIndex: number, highlight: boolean) {
+    const pieceElement = this.playerPieceQL.find(
+      (el) =>
+        el.nativeElement.getAttribute('playerId') === this.currentPlayer &&
+        el.nativeElement.getAttribute('piece') === pieceIndex.toString()
+    );
+    if (pieceElement) {
+      pieceElement.nativeElement.className = highlight
+        ? 'highlight player-piece'
+        : 'player-piece';
+    }
+  }
+
+  public onPieceClick(pieceIndex: number) {
+    const pieceElement = this.playerPieceQL.toArray()[pieceIndex];
+    if (pieceElement.nativeElement.classList.contains('highlight')) {
+      this.movePiece(
+        this.currentPlayer as keyof typeof PLAYERS,
+        pieceIndex,
+        this.diceValue
+      );
+      this.hasValidMove = false;
+      this.endTurn();
+    }
+  }
+
+  private movePiece(
+    player: keyof typeof PLAYERS,
     pieceIndex: number,
     diceValue: number
-  ) => {
-    let currentPosition = this.positions[player][pieceIndex];
-    console.log('currentPosition', currentPosition);
-    // If piece is in the base, it should start at START_POSITIONS
+  ) {
+    let currentPosition =
+      this.positions[player as keyof typeof this.positions][pieceIndex];
+
     if (
       BASE_POSITIONS[player as keyof typeof BASE_POSITIONS].includes(
         currentPosition
@@ -62,14 +125,11 @@ export class LudoLogicComponent {
         currentPosition =
           START_POSITIONS[player as keyof typeof START_POSITIONS];
       } else {
-        // Do nothing if the piece is in the base and dice is not 6
         return;
       }
     } else {
-      // Move the piece forward by diceValue
       currentPosition += diceValue;
 
-      // Handle wrapping around the board
       if (
         currentPosition > TURNING_POINTS[player as keyof typeof TURNING_POINTS]
       ) {
@@ -81,27 +141,26 @@ export class LudoLogicComponent {
           ];
       }
 
-      // If the piece has reached the home position
       if (
         currentPosition ===
         HOME_POSITIONS[player as keyof typeof HOME_POSITIONS]
       ) {
-        // Handle reaching home
+        console.log(`${player.toString()} won!`);
+        this.gameOver = true;
+        return;
       }
     }
 
-    // Update the position
-    this.positions[player][pieceIndex] = currentPosition;
-    console.log('position', currentPosition);
-    // Apply the new position using coordinates
+    this.positions[player as keyof typeof this.positions][pieceIndex] =
+      currentPosition;
     this.setPiecePosition(player, pieceIndex, currentPosition);
-  };
+  }
 
-  public setPiecePosition = (
-    player: string,
+  private setPiecePosition(
+    player: keyof typeof PLAYERS,
     pieceIndex: number,
     position: number
-  ) => {
+  ) {
     if (position in COORDINATES_MAP) {
       const [x, y] = COORDINATES_MAP[position as keyof typeof COORDINATES_MAP];
 
@@ -119,5 +178,19 @@ export class LudoLogicComponent {
     } else {
       console.error(`Invalid position: ${position}`);
     }
-  };
+  }
+
+  private endTurn() {
+    this.clearHighlights();
+    if (this.diceValue !== 6) {
+      this.currentPlayer = this.currentPlayer === 'P1' ? 'P2' : 'P1';
+    }
+    console.log(`Next turn: ${this.currentPlayer}`);
+  }
+
+  private clearHighlights() {
+    this.playerPieceQL.forEach((el) => {
+      el.nativeElement.className = 'player-piece';
+    });
+  }
 }

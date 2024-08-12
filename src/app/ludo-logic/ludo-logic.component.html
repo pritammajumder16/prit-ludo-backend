@@ -7,9 +7,10 @@
       <div
         class="player-piece"
         [attr.playerId]="playerId"
-        *ngFor="let pieceId of [0, 1, 2, 3]"
+        *ngFor="let pieceId of [0, 1, 2, 3]; index as i"
         [attr.piece]="pieceId"
         #playerPiece
+        (click)="onPieceClick(i)"
       ></div>
     </div>
 
